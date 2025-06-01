@@ -1,0 +1,91 @@
+.trigger {
+    position: relative;
+}
+
+.tooltip {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: all 300ms ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    text-align: center;
+    min-width: 200px;
+    max-width: 300px;
+    overflow: hidden;
+    word-wrap: break-word;
+    background-color: var(--color-slate-500);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.tooltip::before {
+    content: "";
+    position: absolute;
+    min-width: 20px;
+    padding: 10px;
+    background-color: var(--color-slate-500);
+}
+
+.tooltip.top::after {
+    top: 0;
+    left: 50px;
+    transform: translate(-50%, calc(-100% - 15px));
+}
+
+.tooltip.top::before {
+    top: 0;
+    left: 50px;
+    transform: translate(-50%, calc(-100% - 10px)) rotate(45deg);
+}
+
+.tooltip.bottom::after {
+    bottom: 0;
+    left: 50px;
+    transform: translate(-50%, calc(100% + 15px));
+}
+
+.tooltip.bottom::before {
+    bottom: 0;
+    left: 50px;
+    transform: translate(-50%, calc(100% + 10px)) rotate(45deg);
+}
+
+.tooltip.left::after {
+    left: 0;
+    top: 50%;
+    transform: translate(calc(-100% - 15px), -50%);
+}
+
+
+.tooltip.left::before {
+    left: 0;
+    top: 50%;
+    transform: translate(calc(-100% - 10px), -50%) rotate(45deg);
+}
+
+.tooltip.right::after {
+    right: 0;
+    top: 50%;
+    transform: translate(calc(100% + 15px), -50%);
+}
+
+
+.tooltip.right::before {
+    right: 0;
+    top: 50%;
+    transform: translate(calc(100% + 10px), -50%) rotate(45deg);
+}
+
+.trigger:hover {
+    .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+}
