@@ -1,0 +1,43 @@
+.dialog:modal {
+    position: fixed;
+    min-width: 300px;
+    min-height: 200px;
+    border: 1px solid var(--color-black);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 30px var(--color-blue-500);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    &::backdrop {
+        background-color: --alpha(var(--color-indigo-400) / 10%);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+}
+
+.dialog-open {
+    animation: dialog-in-out 300ms ease-in-out forwards;
+}
+
+
+.dialog-closing {
+    animation: dialog-in-out 300ms ease-in-out reverse forwards;
+}
+
+@keyframes dialog-in-out {
+    0% {
+        transform: translate(-50%, -50%) scale(0%);
+        opecity: 0
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(130%);
+        opecity: 0.5
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(100%);
+        opecity: 1
+    }
+}
+

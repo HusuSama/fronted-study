@@ -1,12 +1,12 @@
 <template>
-    <div class="trigger">
-        <div :class="['tooltip', props.position]" :data-tooltip="props.content"></div>
+    <div :class="Styles.trigger">
+        <div :class="[Styles.tooltip, Styles[`tooltip-${props.position}`]]" :data-tooltip="props.content"></div>
         <slot />
     </div>
 </template>
 
 <script setup lang="ts">
-import "./index.css";
+import Styles from "./index.module.css";
 
 type TooltipPosition = "top" | "bottom" | "left" | "right"
 
