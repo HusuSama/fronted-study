@@ -1,0 +1,132 @@
+h2{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.widget {
+    width: 80vw;
+    max-width: 600px;
+    padding: 1rem;
+    margin: 2rem auto;
+    border-radius: 1rem;
+    background-color: #fff;
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.025);
+}
+
+.tabs {
+    /* 设置变量，包含当前选中的标签和总标签数量，方便其他元素进行计算 */
+    --tabl-count: 3;
+    --active: 0;
+    /* 使用伪元素进行背景设置，伪元素设置为 absolute ，需要给父级 relative 定位进行参照 */
+    position: relative;
+    /* 为了使在底层的伪元素显示，需要设置此属性 */
+    /* 这个元素是创建了一个隔离的堆叠上下文 */
+    /* 我们在伪元素设置了 z-index 为 -1 */
+    /* 如果不设置隔离的上下文堆叠，以整个body来设置， */
+    /* 伪元素会被放到最下方，会看不见， */
+    /* 所以设置这个，只是在当前的父级元素下设置堆叠层级 */
+    /* 默认是 auto， */
+    /* isolation：强制创建新的堆叠上下文，实现隔离 */
+    /* inherit/initial：继承父元素值或者重置为默认值 */
+    isolation: isolate;
+    display: flex;
+    height: 3.5rem;
+    /* 设置一个底部的边框，然后在选中时覆盖掉，可以营造出隔离和选中连接到一起的感觉 */
+    border-block-end: 1px solid #e9ebec;
+}
+
+/* 只需要radio功能，并不需要显示出来 */
+.tabs input {
+    display: none;
+}
+
+/* 设置一下label显示位置，自动扩容并进行居中 */
+.tabs label {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 设置一些额外样式  */
+    font-size: 0.93rem;
+    font-weight: 600;
+    color: #656d7b;
+    cursor: pointer;
+    transition: color 0.5 ease-in-out;
+}
+
+/* 设置一下被选中的效果 */
+.tabs input:checked + label {
+    color: #101010;
+}
+
+/* 利用after伪元素设置显示的背景 */
+.tabs::after {
+    pointer-events: none;
+    /* 使用绝对定位，使其能覆盖到label元素上，而不是加在后面 */
+    position: absolute;
+    content: "";
+    /* 让作为背景的伪元素位于底层 */
+    /* 但是这样会出现不显示的情况，需要父级给定一个 isolation 数据; */
+    z-index: -1;
+    /* 设置宽度百分百会完全覆盖整个tabs父级，我们只需要覆盖当前指定的tab，所以需要使用变量计算 */
+    /* width: 100%; */
+    /* 如果确定标签的数量，可以使用固定的，比如这里 3 个标签 */
+    /* 但大多情况下，不影响写死，应该通过变量进行赋值，更加灵活 */
+    /* 我们直接在css中设置一下固定变量，在react或者vue或者js可以投递变量数据 */
+    /* width: calc((100% / 3) - 2px); */
+    width: calc((100% / var(--tabl-count) - 2px));
+    /* 指定一下偏移量，inset是 top right bottom left 的缩写 */
+    /* 此处向下移动可以覆盖一下tabs父级元素设置的底部边框，有一个连接的效果 */
+    /* 此处的是向下偏移，三个值则分别代表 上|左右|下 */
+    /* 你也可以使用下面的形式，手动定义四个位置，不然绝对定位的元素不会显示，或者显示有问题 */
+    /* left: 0; */
+    /* right: 0; */
+    /* top: 0; */
+    /* bottom: -1px; */
+    inset: 0 0 -1px;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border: 1px solid, #e9ebec;
+    border-block-end: none;
+    background-image: linear-gradient(#edf4ff, #fff);
+
+    /* 进行左右移动，根据我们设置的变量来 */
+    /* 比如第一个是 0，那就是 0 ，则没有偏移 */
+    /* 选中第一个，则向右偏移 100% 的位置，背景被移动到第二个 tab 上 */
+    translate: calc(var(--active) * 100%);
+    /* 给一个平滑的过渡效果 */
+    transition: translate 0.2s ease-in-out;
+}
+
+/* 在css中手动维护 active 选中的变量 */
+/* 在正常情况下，这个最好由外部传递 */
+/* 简单情况下可以这样 */
+.tabs:has(:checked:nth-of-type(1)) {
+    --active: 0;
+}
+.tabs:has(:checked:nth-of-type(2)) {
+    --active: 1;
+}
+.tabs:has(:checked:nth-of-type(3)) {
+    --active: 2;
+}
+
+/* 上面的，我们已经把标签过渡效果做出来了，剩下的就是控制内容的显示 */
+
+.tab-content {
+    padding: 1rem;
+}
+
+/* 首先隐藏掉所有的 content-xxx 的类名的标签 */
+/* 这里获取到的是所有类型，用 content- 开头的标签 */
+[class^="content-"] {
+    display: none;
+}
+
+/* 然后单独控制内容的显示 */
+/* 如果widget 子元素有被 checked 的元素 */
+/* 则将下面的某个content元素设置显示 */
+.widget:has(:checked:nth-of-type(1)) .content-1,
+.widget:has(:checked:nth-of-type(2)) .content-2,
+.widget:has(:checked:nth-of-type(3)) .content-3 {
+    display: block;
+}
